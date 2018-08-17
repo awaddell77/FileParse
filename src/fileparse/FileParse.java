@@ -17,10 +17,20 @@ public class FileParse {
     public static void main(String[] args) throws IOException {
         //Path test2 = Paths.get("C:\\Users\\awaddell\\Documents\\NetBeansProjects\\FileParse\\src\\fileparse\\kohlerrep.csv");
         URL res =  FileParse.class.getClassLoader().getResource("kohlerrep.csv");
+        String test5;
+        System.out.println(System.getProperty("file.separator").toString());
         String nRes = res.toString().substring(6);
-       
+        TestClass testInst = new TestClass(nRes);
+        String dir = testInst.dirExtract();
         System.out.println(nRes);
+        System.out.println(testInst.dirExtract());
+        testInst.setDir();
+        testInst.mkDir("TESTFOLDER", true);
         Path test2 = Paths.get(nRes);
+        Path test3 = Paths.get(testInst.dirExtract());
+        System.out.println("PATH: " + test2.toString());
+        System.out.println("PATH2: " + test3.toString());
+        
         Reader reader = null;
         try {
             
