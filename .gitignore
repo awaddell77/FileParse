@@ -1,0 +1,9 @@
+
+build.xml
+build/classes/.netbeans_automatic_build
+build/classes/.netbeans_update_resources
+*.csv
+*.properties
+*.mf
+nbproject/build-impl.xml
+nbproject/project.xml
