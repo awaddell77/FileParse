@@ -25,7 +25,8 @@ public class FileParse {
         System.out.println(nRes);
         System.out.println(testInst.dirExtract());
         testInst.setDir();
-        testInst.mkDir("TESTFOLDER", true);
+        testInst.mkDir("TEST", true);
+        
         Path test2 = Paths.get(nRes);
         Path test3 = Paths.get(testInst.dirExtract());
         System.out.println("PATH: " + test2.toString());

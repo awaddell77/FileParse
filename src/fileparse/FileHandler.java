@@ -50,18 +50,12 @@ abstract class FileHandler<T>{
         }
         else{
             return this.Tdir;
-            
         }
-        
-        
-    
         String[] path = temp.split("/");
-        //String[] dir = new String[path.length-2];
         String ndir = "";
         for (int i = 0; i < path.length-1; i++){
             ndir += path[i] + System.getProperty("file.separator");
         }
-        
         return ndir;
     }
     public void fixNameDir(){
@@ -89,10 +83,11 @@ abstract class FileHandler<T>{
         if (!check.exists()){
             check.mkdir();
         }
-        
+    
         
         
     }
+
     abstract public void openFile();
     //abstract public void exportData();
     //abstract public int lineCount();
