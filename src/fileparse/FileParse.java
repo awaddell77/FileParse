@@ -1,65 +1,62 @@
 
 package fileparse;
-import fileparse.FileHandler;
-import com.opencsv.CSVReader;
+
 import java.io.IOException;
-import java.io.Reader;
-import java.net.URL;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.Arrays;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.util.LinkedList;
+
+
 public class FileParse {
 
 
-    public static void main(String[] args) throws IOException {
-        //Path test2 = Paths.get("C:\\Users\\awaddell\\Documents\\NetBeansProjects\\FileParse\\src\\fileparse\\kohlerrep.csv");
-        URL res =  FileParse.class.getClassLoader().getResource("kohlerrep.csv");
-        String test5;
-        System.out.println(System.getProperty("file.separator").toString());
-        String nRes = res.toString().substring(6);
-        TestClass testInst = new TestClass(nRes);
-        String dir = testInst.dirExtract();
-        System.out.println(nRes);
-        System.out.println(testInst.dirExtract());
-        testInst.setDir();
-        testInst.mkDir("TEST", true);
-        
-        Path test2 = Paths.get(nRes);
-        Path test3 = Paths.get(testInst.dirExtract());
-        System.out.println("PATH: " + test2.toString());
-        System.out.println("PATH2: " + test3.toString());
-        
-        Reader reader = null;
-        try {
+    public static FileHandler importData(String fname) throws IOException {
+        String temp = fNameExtract(fname);
+        if (!(fname.equals(temp)) && temp.contains(".csv")){
+            CSVHandler mInst = new CSVHandler(temp, fname); //wrong needs to be fixed
+            mInst.loadFile();
             
-            reader = Files.newBufferedReader(test2);
-           
-        } catch (IOException ex) {
-            System.out.println("ERROR: " + ex.getMessage());
-            return;
-        }
-        CSVReader f = new CSVReader(reader);
-        System.out.println("SUCCESS");
-        String[] test = null;
-        while((test = f.readNext()) != null){
-           // System.out.println(Arrays.toString(test));
+            return mInst;
             
         }
+        else{
+            //used for excel files
+            //just has a placeholder for now
+            CSVHandler mInst = new CSVHandler(fname);
+            mInst.loadFile();
+            return mInst;
+        }
+
     }
-    
+    public static String fNameExtract(String fNameWPath){
+        String[] path;
+        //String[] path = fNameWPath.split(System.getProperty("file.separator"));
+        if (System.getProperty("os.name").equals("win")){
+            path = fNameWPath.split("\\\\");
+        }
+        else{
+            path = fNameWPath.split("/");
+            
+        }
+        return path[path.length-1];
 }
-class TestClass extends FileHandler{
-    public TestClass(String fName){
-        super(fName);
-        this.fData = "TEST";
-        
+    public static String dirExtract(String pathWFname){
+        String[] path = pathWFname.split("/");
+        String ndir = "";
+        for (int i = 0; i < path.length-1; i++){
+            ndir += path[i] + System.getProperty("file.separator");
+        }
+        return ndir;
     }
-    @Override
-    public void openFile(){
-        System.out.println("DONE");
+    public static String sep(boolean split){
+        boolean isWin = System.getProperty("os.name").equals("win");
+        if (isWin && split){
+            return "\\\\";
+        }
+        else if (isWin){
+            return "\\";
+        }
+        else{
+            return "/";
+        }
     }
-    
 }
+

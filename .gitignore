@@ -7,3 +7,4 @@ build/classes/.netbeans_update_resources
 *.mf
 nbproject/build-impl.xml
 nbproject/project.xml
+/dist/
