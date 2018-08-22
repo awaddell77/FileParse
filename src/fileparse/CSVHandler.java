@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package fileparse;
 
 import com.opencsv.CSVReader;
@@ -33,8 +28,8 @@ class CSVHandler extends FileHandler{
         Reader reader = null;
         try {
             
-            reader = Files.newBufferedReader((Paths.get(this.fName)));
-           
+            //reader = Files.newBufferedReader((Paths.get(this.fName)));
+           reader = Files.newBufferedReader(Paths.get(this.getPathWFile()));
         } catch (IOException ex) {
             System.out.println("ERROR: " + ex.getMessage());
         }

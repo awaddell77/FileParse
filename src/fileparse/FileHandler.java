@@ -1,8 +1,4 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package fileparse;
 import java.io.File;
 
@@ -53,7 +49,7 @@ abstract public class FileHandler{
         
     }
     public String getPathWFile(){
-        return this.Tdir + "/" + this.fName;
+        return this.Tdir + System.getProperty("file.separator") + this.fName;
     }
     public String getDir(){
         return this.Tdir;
