@@ -26,6 +26,9 @@ public class Test {
         System.out.println(System.getProperty("file.separator").toString());
         System.out.println(Arrays.toString(testobj.getHeader()));
         System.out.println(testobj.getClass());
+        System.out.println("Document has " + testobj.sizeTest() + " lines");
+        testobj.exportData("C:\\Users\\awaddell\\Documents\\kohlerrep3.csv");
+        
         
         
         

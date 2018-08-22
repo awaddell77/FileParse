@@ -1,11 +1,14 @@
 package fileparse;
 
 import com.opencsv.CSVReader;
+import com.opencsv.CSVWriter;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Reader;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
@@ -78,5 +81,34 @@ class CSVHandler extends FileHandler{
         }
         this.header = (String[]) h.toArray();
     }
+    @Override
+    public void exportData(String fnameWPath) {
+        FileWriter tFile = null;
+        
+        try {
+            tFile = new FileWriter(fnameWPath);
+        } catch (IOException ex) {
+            Logger.getLogger(CSVHandler.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        CSVWriter writer = new CSVWriter(tFile);
+        writer.writeNext(this.header);
+        for (int i = 0; i < this.fData.size(); i++){
+            writer.writeNext(this.getLineData(this.fData.get(i)));
+            
+        }
+        try {
+            writer.flush();
+            writer.close();
+        } catch (IOException ex) {
+            Logger.getLogger(CSVHandler.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        
+       
+        
+    }
+
+    
+    
     
 }

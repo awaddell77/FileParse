@@ -19,6 +19,7 @@ abstract public class FileHandler{
     protected String saveDir;
     protected int headerLoc = 0;
     protected String[] header;
+    protected String delim; 
     
     public FileHandler(String fName) {
         this.fName = fName;
@@ -77,6 +78,12 @@ abstract public class FileHandler{
     public void setDir(String nDir){
         this.Tdir = nDir;
     }
+    public void setDelim(String delim){
+        this.delim = delim;
+    }
+    public int sizeTest(){
+        return this.fData.size();
+    }
     protected boolean checkDir(){
         File checker = new File(this.Tdir);
         return checker.exists();
@@ -85,7 +92,7 @@ abstract public class FileHandler{
     }
 
     
-    private void mkDir(String dir, boolean inCWD){
+    protected void mkDir(String dir, boolean inCWD){
         if (inCWD){
             dir = this.Tdir + System.getProperty("file.separator") + dir;
         }
@@ -97,6 +104,14 @@ abstract public class FileHandler{
         
         
     }
+    protected String[] getLineData(HashMap<String, String> hashLine){
+        String[] line = new String[this.header.length];
+        for (int i = 0; i < this.header.length; i++){
+            line[i] =  hashLine.get(this.header[i]);
+        }
+        return line;
+} 
+
 
     abstract public String[] getHeader();
     abstract public void loadFile();
@@ -104,6 +119,8 @@ abstract public class FileHandler{
     //abstract public int lineCount();
     abstract public HashMap getRow(int rownum);
     abstract public void importData(ArrayList<HashMap> nData);
+    abstract public void exportData(String fnameWPath);
+    
     
     
     
