@@ -19,16 +19,17 @@ public class Test {
     
  public static void main(String[] args) throws IOException {
         Path target = Paths.get("C:\\Users\\awaddell\\Documents\\kohlerrep.csv");
-        //Path target = Paths.get("C:\\Users\\awaddell\\Documents\\NetBeansProjects\\FileParse\\src\\fileparse\\kohlerrep.csv");
+        Path target2 = Paths.get("C:\\Users\\awaddell\\Documents\\kohlerrep.xlsx");
 
         FileHandler testobj = FileParse.importData(target);
+        FileHandler testobj2 = FileParse.importData(target2);
         //System.out.println("TEST OBJ DIR: " + testobj.Tdir);
         System.out.println(System.getProperty("file.separator").toString());
         System.out.println(Arrays.toString(testobj.getHeader()));
         System.out.println(testobj.getClass());
         System.out.println("Document has " + testobj.sizeTest() + " lines");
-        testobj.exportData("C:\\Users\\awaddell\\Documents\\kohlerrep3.csv");
-        
+        testobj.exportData("C:\\Users\\awaddell\\Documents\\kohlerrep3test.csv");
+        System.out.println(testobj2.getClass());
         
         
         

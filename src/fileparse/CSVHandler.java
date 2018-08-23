@@ -16,7 +16,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 
-class CSVHandler extends FileHandler{
+class CSVHandler<E> extends FileHandler<E>{
     public CSVHandler(String fName){
         super(fName);
         
@@ -64,15 +64,16 @@ class CSVHandler extends FileHandler{
         
     }
     @Override
-    public HashMap getRow(int rownum){
+    public HashMap<E, E> getRow(int rownum){
         return this.fData.get(rownum);
     }
+    
     @Override
-    public String[] getHeader(){
+    public  Object[] getHeader(){
         return this.header;
     }
     @Override
-    public void importData(ArrayList<HashMap> nData){
+    public void importData(ArrayList<HashMap<E, E>> nData){
         this.fData = nData;
         this.length = nData.size();
         HashSet<Set> h = new HashSet<>();
@@ -93,7 +94,7 @@ class CSVHandler extends FileHandler{
         CSVWriter writer = new CSVWriter(tFile);
         writer.writeNext(this.header);
         for (int i = 0; i < this.fData.size(); i++){
-            writer.writeNext(this.getLineData(this.fData.get(i)));
+            writer.writeNext((String[]) this.getLineData(this.fData.get(i)));
             
         }
         try {

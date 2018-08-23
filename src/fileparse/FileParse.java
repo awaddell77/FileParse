@@ -7,8 +7,8 @@ import java.nio.file.Paths;
 import java.util.LinkedList;
 
 /*
-importData method requires Path instead of string becaus converting from string
-to path adds an extra \ to windows paths while converting from Path to string does not
+importData method requires Path instead of string because converting from string
+to path adds an extra \ to windows paths whereas converting from Path to string does not
 */
 public class FileParse {
 
@@ -32,6 +32,10 @@ public class FileParse {
         else if (temp.contains(".csv")){
             CSVHandler mInst = new CSVHandler(temp);
             mInst.loadFile();
+            return mInst;
+        }
+        else if(temp.contains(".xls")){
+            ExcelHandler mInst = new ExcelHandler(temp);
             return mInst;
         }
         else{

@@ -11,17 +11,17 @@ import java.util.HashMap;
  *
  * @author awaddell
  */
-abstract public class FileHandler{
+abstract public class FileHandler<E>{
     public int length = 0;
     protected String fName;
     protected String Tdir;
-    protected ArrayList<HashMap> fData = new ArrayList<>();
+    protected ArrayList<HashMap<E, E>> fData = new ArrayList<>();
     protected String saveDir;
     protected int headerLoc = 0;
     protected String[] header;
     protected String delim; 
     
-    public FileHandler(String fName) {
+    public FileHandler  (String fName) {
         this.fName = fName;
         this.Tdir = Paths.get("").toString();
         
@@ -39,7 +39,7 @@ abstract public class FileHandler{
     public String getFname(){
         return this.fName;
     }
-    public ArrayList<HashMap> getData(){
+    public ArrayList<HashMap<E, E>> getData(){
         return this.fData;
     
 }
@@ -104,21 +104,21 @@ abstract public class FileHandler{
         
         
     }
-    protected String[] getLineData(HashMap<String, String> hashLine){
+    protected String[] getLineData(HashMap<E, E> hashLine){
         String[] line = new String[this.header.length];
         for (int i = 0; i < this.header.length; i++){
-            line[i] =  hashLine.get(this.header[i]);
+            line[i] =  (String) hashLine.get(this.header[i]);
         }
         return line;
 } 
 
-
-    abstract public String[] getHeader();
+    abstract public HashMap getRow(int rownum);
+    abstract public Object[] getHeader();
     abstract public void loadFile();
     //abstract public void exportData();
     //abstract public int lineCount();
-    abstract public HashMap getRow(int rownum);
-    abstract public void importData(ArrayList<HashMap> nData);
+    
+    abstract public void importData(ArrayList<HashMap<E, E>> nData);
     abstract public void exportData(String fnameWPath);
     
     
