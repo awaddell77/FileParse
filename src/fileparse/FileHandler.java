@@ -111,8 +111,11 @@ abstract public class FileHandler<E>{
         }
         return line;
 } 
+    public boolean isMultSheet(){
+        return false;
+    }
 
-    abstract public HashMap getRow(int rownum);
+    abstract public HashMap<E,E> getRow(int rownum);
     abstract public Object[] getHeader();
     abstract public void loadFile();
     //abstract public void exportData();

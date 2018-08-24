@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -25,6 +26,10 @@ import org.apache.poi.ss.usermodel.*;
  * @author awaddell
  */
 class ExcelHandler<E> extends FileHandler<E> {
+    private String targetSheet;
+    private boolean isMultSheet = false;
+    private HashMap<String, SheetC> multSheet = new HashMap<>();
+    
     
     
     public ExcelHandler(String fName){
@@ -37,6 +42,7 @@ class ExcelHandler<E> extends FileHandler<E> {
     @Override
     public void loadFile(){
         Workbook wkbk = null;
+        System.out.println("PATH: " + this.getPathWFile());
         try {
             wkbk = WorkbookFactory.create(new File(this.getPathWFile()));
         } catch (IOException | InvalidFormatException | EncryptedDocumentException ex) {
@@ -45,29 +51,104 @@ class ExcelHandler<E> extends FileHandler<E> {
         
 
         int n = wkbk.getNumberOfSheets();
-        for (int i = 0; i < n; i++){
-            Sheet sheet = wkbk.getSheetAt(i);
-            SheetC temp = new SheetC(sheet.getSheetName());
-            sheet.getRow(0).
-            DataFormatter dataFormatter = new DataFormatter();
-            int len = sheet.getLastRowNum();
-            for (int i2 = 1; i < len; i++){
-                Row temprow = sheet.getRow(i2);
-                
-                for (Cell c: temprow){
-                    String val = c.getStringCellValue();
-                    c.getColumnIndex()
-                    
-                    
-                }
-            }
+        
+        if (n > 1){
+            this.isMultSheet = true;
+            this.loadFM(wkbk);
+            
+            return;
         }
+        this.fData = this.processSheet(wkbk, 0);
+        /*Sheet sheet = wkbk.getSheetAt(0);
+        int shLen = sheet.getLastRowNum();
+        Row header = sheet.getRow(0);
+        int rLen = header.getLastCellNum();
+        String[] tempHead = new String[rLen];
+        for (int i= 0; i < rLen; i++){
+            
+            Cell cell = header.getCell(i);
+            tempHead[i] = cell.getStringCellValue();
+                       
+        }
+        this.header = tempHead;
+        System.out.println("HEADER:");
+        System.out.println(Arrays.toString(this.header));
         
-        
-        
+        for (int i = 1; i < shLen; i++){
+            Row row = sheet.getRow(i);
+            DataFormatter dataFormatter = new DataFormatter();
+            //int len = sheet.getLastRowNum();
+            HashMap tempHash = new HashMap<>();
+            
+            for (int i2 = 0; i2 < row.getLastCellNum(); i2++){
+                Cell tempCell = row.getCell(i2);
+                String val = dataFormatter.formatCellValue(tempCell);
+                
+                tempHash.put(this.header[i2], val);
+            }
+            System.out.println(Arrays.toString(this.getLineData(tempHash)));
+            this.fData.add(tempHash);
+            tempHash.clear();
+        }*/
         
 
     }
+    private ArrayList<HashMap<E, E>> processSheet(Workbook wkbk, int shNum){
+        this.header = null;
+        Sheet sheet = wkbk.getSheetAt(shNum);
+        ArrayList<HashMap<E, E>> tempArrLst = new ArrayList<>();
+        int shLen = sheet.getLastRowNum();
+        Row header = sheet.getRow(0);
+        int rLen = header.getLastCellNum();
+        String[] tempHead = new String[rLen];
+        for (int i= 0; i < rLen; i++){
+            
+            Cell cell = header.getCell(i);
+            tempHead[i] = cell.getStringCellValue();
+                       
+        }
+        this.header = tempHead;
+        System.out.println("HEADER:");
+        System.out.println(Arrays.toString(this.header));
+        
+        for (int i = 1; i < shLen; i++){
+            Row row = sheet.getRow(i);
+            DataFormatter dataFormatter = new DataFormatter();
+            //int len = sheet.getLastRowNum();
+            HashMap tempHash = new HashMap<>();
+            
+            for (int i2 = 0; i2 < row.getLastCellNum(); i2++){
+                Cell tempCell = row.getCell(i2);
+                String val = dataFormatter.formatCellValue(tempCell);
+                
+                tempHash.put(this.header[i2], val);
+            }
+            System.out.println(Arrays.toString(this.getLineData(tempHash)));
+            tempArrLst.add(tempHash);
+            tempHash.clear();
+        }
+        return tempArrLst;
+    }
+    private void loadFM(Workbook wkbk){
+        int shNum = wkbk.getNumberOfSheets();
+        for (int i = 0; i < shNum; i++){
+            Sheet sheet = wkbk.getSheetAt(i);
+            ArrayList<HashMap<E, E>> tempArr = this.processSheet(wkbk, shNum);
+            String[] tempHead = this.header;
+            SheetC tempSheet = new SheetC(tempArr, sheet.getSheetName(),tempHead);
+            this.multSheet.put(tempSheet.getName(),tempSheet);
+            
+            
+        }
+        
+        
+    }
+    @Override
+    public boolean isMultSheet(){
+        return this.isMultSheet;
+      
+    }
+    
     
     
     
@@ -84,10 +165,19 @@ class ExcelHandler<E> extends FileHandler<E> {
     }
 
     @Override
-    public HashMap getRow(int rownum) {
-        //returns row of sheet in Hashmap form
+    public HashMap<E,E> getRow(int rownum) {
+        //returns row of the first sheet in Hashmap form
+        return this.fData.get(rownum);
         
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        
+        
+    }
+    public HashMap<E,E> getRow(int rownum, int sheetnum) {
+        //returns row of the first sheet in Hashmap form
+        return (HashMap<E, E>) fData.get(sheetnum).get(rownum);
+        
+        
+        
     }
 
     @Override
@@ -96,16 +186,23 @@ class ExcelHandler<E> extends FileHandler<E> {
     }
     private class SheetC{
         private final String sheetName;
-        private ArrayList<HashMap> sheetData = new ArrayList<>();
-        public SheetC(String sheetName){
+        private ArrayList<HashMap<E, E>> sheetData = new ArrayList<>();
+        private String[] header;
+        public SheetC(String sheetName, String[] header){
             this.sheetName = sheetName;
+            this.header = header;
+        }
+       public SheetC(ArrayList<HashMap<E, E>> arr, String sheetName, String[] header){
+            this.sheetData = arr;
+            this.sheetName = sheetName;
+            this.header = header;
         }
         public String getName(){
             return this.sheetName;
         }
-        public void addRow(HashMap hashLine){
-            sheetData.add(hashLine);
-            
+        public String[] getHeader(){
+            return this.header;
+                    
         }
         
         

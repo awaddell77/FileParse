@@ -13,6 +13,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
+import java.util.HashMap;
 
 //for testing only
 public class Test {
@@ -30,6 +31,9 @@ public class Test {
         System.out.println("Document has " + testobj.sizeTest() + " lines");
         testobj.exportData("C:\\Users\\awaddell\\Documents\\kohlerrep3test.csv");
         System.out.println(testobj2.getClass());
+        testobj2.loadFile();
+        HashMap j = testobj2.getRow(3);
+        //System.out.println(Arrays.toString(testobj2.getLineData(j)));
         
         
         

@@ -35,7 +35,7 @@ public class FileParse {
             return mInst;
         }
         else if(temp.contains(".xls")){
-            ExcelHandler mInst = new ExcelHandler(temp);
+            ExcelHandler mInst = new ExcelHandler(temp, dirName);
             return mInst;
         }
         else{
