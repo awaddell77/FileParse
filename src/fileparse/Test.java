@@ -21,9 +21,11 @@ public class Test {
  public static void main(String[] args) throws IOException {
         Path target = Paths.get("C:\\Users\\awaddell\\Documents\\kohlerrep.csv");
         Path target2 = Paths.get("C:\\Users\\awaddell\\Documents\\kohlerrep.xlsx");
+        Path target3 = Paths.get("C:\\Users\\awaddell\\Documents\\kohlerrepM.xlsx");
 
         FileHandler testobj = FileParse.importData(target);
         FileHandler testobj2 = FileParse.importData(target2);
+        ExcelHandler testobj3 =  (ExcelHandler) FileParse.importData(target3);
         //System.out.println("TEST OBJ DIR: " + testobj.Tdir);
         System.out.println(System.getProperty("file.separator").toString());
         System.out.println(Arrays.toString(testobj.getHeader()));
@@ -31,8 +33,11 @@ public class Test {
         System.out.println("Document has " + testobj.sizeTest() + " lines");
         testobj.exportData("C:\\Users\\awaddell\\Documents\\kohlerrep3test.csv");
         System.out.println(testobj2.getClass());
-        testobj2.loadFile();
-        HashMap j = testobj2.getRow(3);
+        //testobj2.loadFile();
+        //System.out.println(Arrays.toString(testobj2.getSheetNames().toArray()));
+        //HashMap j = testobj2.getRow(3);
+        testobj3.loadFile();
+        System.out.println(Arrays.toString(testobj3.getSheetNames().toArray()));
         //System.out.println(Arrays.toString(testobj2.getLineData(j)));
         
         
@@ -46,5 +51,6 @@ public class Test {
         
         
     }
+    
     
 }

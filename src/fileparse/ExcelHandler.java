@@ -29,7 +29,8 @@ class ExcelHandler<E> extends FileHandler<E> {
     private String targetSheet;
     private boolean isMultSheet = false;
     private HashMap<String, SheetC> multSheet = new HashMap<>();
-    
+    private ArrayList<String> sheetNames = new ArrayList<>();
+ 
     
     
     public ExcelHandler(String fName){
@@ -38,7 +39,9 @@ class ExcelHandler<E> extends FileHandler<E> {
     public ExcelHandler(String fName, String tDir){
         super(fName, tDir);
         
+        
     }
+
     @Override
     public void loadFile(){
         Workbook wkbk = null;
@@ -48,17 +51,20 @@ class ExcelHandler<E> extends FileHandler<E> {
         } catch (IOException | InvalidFormatException | EncryptedDocumentException ex) {
             Logger.getLogger(ExcelHandler.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
-
         int n = wkbk.getNumberOfSheets();
-        
+        System.out.println("FILE HAS " + n + " SHEETS");
+       
         if (n > 1){
             this.isMultSheet = true;
             this.loadFM(wkbk);
             
-            return;
+            
         }
-        this.fData = this.processSheet(wkbk, 0);
+        else{
+            
+            //this.sheetNames.add(wkbk.getSheetName(0));
+            this.fData = this.processSheet(wkbk, 0);
+        }
         /*Sheet sheet = wkbk.getSheetAt(0);
         int shLen = sheet.getLastRowNum();
         Row header = sheet.getRow(0);
@@ -101,6 +107,10 @@ class ExcelHandler<E> extends FileHandler<E> {
         Row header = sheet.getRow(0);
         int rLen = header.getLastCellNum();
         String[] tempHead = new String[rLen];
+        //String str = sheet.getSheetName();
+        //this.sheetNames.add(str);
+        //System.out.println("ADDING " + str + " to sheetnames");
+        
         for (int i= 0; i < rLen; i++){
             
             Cell cell = header.getCell(i);
@@ -108,8 +118,8 @@ class ExcelHandler<E> extends FileHandler<E> {
                        
         }
         this.header = tempHead;
-        System.out.println("HEADER:");
-        System.out.println(Arrays.toString(this.header));
+        //System.out.println("HEADER:");
+        //System.out.println(Arrays.toString(this.header));
         
         for (int i = 1; i < shLen; i++){
             Row row = sheet.getRow(i);
@@ -130,10 +140,13 @@ class ExcelHandler<E> extends FileHandler<E> {
         return tempArrLst;
     }
     private void loadFM(Workbook wkbk){
-        int shNum = wkbk.getNumberOfSheets();
-        for (int i = 0; i < shNum; i++){
+        int shNum = wkbk.getNumberOfSheets()-1;
+        for (int i = 0; i <= shNum; i++){
+            //System.out.println("SHEET NAMES : " + wkbk.getSheetName(i));
+            //System.out.println("STORED SHEET NAMES : " + Arrays.toString(this.sheetNames.toArray()));
             Sheet sheet = wkbk.getSheetAt(i);
-            ArrayList<HashMap<E, E>> tempArr = this.processSheet(wkbk, shNum);
+            this.sheetNames.add(sheet.getSheetName());
+            ArrayList<HashMap<E, E>> tempArr = this.processSheet(wkbk, i);
             String[] tempHead = this.header;
             SheetC tempSheet = new SheetC(tempArr, sheet.getSheetName(),tempHead);
             this.multSheet.put(tempSheet.getName(),tempSheet);
@@ -143,11 +156,17 @@ class ExcelHandler<E> extends FileHandler<E> {
         
         
     }
+    
+    @Override
+    public ArrayList<String> getSheetNames(){
+        return this.sheetNames;
+    }
     @Override
     public boolean isMultSheet(){
         return this.isMultSheet;
       
     }
+    
     
     
     
@@ -169,12 +188,13 @@ class ExcelHandler<E> extends FileHandler<E> {
         //returns row of the first sheet in Hashmap form
         return this.fData.get(rownum);
         
-        
-        
     }
-    public HashMap<E,E> getRow(int rownum, int sheetnum) {
+    public HashMap<E,E> getRow(int sheetnum, int rownum ) {
         //returns row of the first sheet in Hashmap form
-        return (HashMap<E, E>) fData.get(sheetnum).get(rownum);
+        if (this.isMultSheet){
+            return this.multSheet.get(this.sheetNames.get(sheetnum)).getRow(rownum);
+        }
+        return fData.get(rownum);
         
         
         
@@ -188,6 +208,7 @@ class ExcelHandler<E> extends FileHandler<E> {
         private final String sheetName;
         private ArrayList<HashMap<E, E>> sheetData = new ArrayList<>();
         private String[] header;
+        public int length = 0;
         public SheetC(String sheetName, String[] header){
             this.sheetName = sheetName;
             this.header = header;
@@ -196,6 +217,7 @@ class ExcelHandler<E> extends FileHandler<E> {
             this.sheetData = arr;
             this.sheetName = sheetName;
             this.header = header;
+            this.length = arr.size();
         }
         public String getName(){
             return this.sheetName;
@@ -203,6 +225,9 @@ class ExcelHandler<E> extends FileHandler<E> {
         public String[] getHeader(){
             return this.header;
                     
+        }
+        public HashMap<E, E> getRow(int rNum){
+            return sheetData.get(rNum);
         }
         
         

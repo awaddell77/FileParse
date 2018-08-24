@@ -16,7 +16,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 
-class CSVHandler<E> extends FileHandler<E>{
+class CSVHandler<E extends FileHandler> extends FileHandler<E>{
     public CSVHandler(String fName){
         super(fName);
         

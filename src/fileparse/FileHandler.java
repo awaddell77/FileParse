@@ -10,6 +10,7 @@ import java.util.HashMap;
 /**
  *
  * @author awaddell
+ * @param <E>
  */
 abstract public class FileHandler<E>{
     public int length = 0;
@@ -89,6 +90,9 @@ abstract public class FileHandler<E>{
         return checker.exists();
         
         
+    }
+    public ArrayList<String> getSheetNames(){
+        return null;
     }
 
     
