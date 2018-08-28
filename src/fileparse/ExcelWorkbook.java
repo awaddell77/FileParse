@@ -13,13 +13,14 @@ import java.util.HashMap;
  * @author awaddell
  * @param <E>
  */
-public interface ExcelWorkbook<E> {
-    public ArrayList<E> getSheetNames();
+public interface ExcelWorkbook<E> extends SpreadsheetDoc<E>{
+    public ArrayList<String> getSheetNames();
     public boolean isMultSheet();
     public HashMap<E,E> getRow(int sheetnum, int rownum );
     
     public void exportData(String fNameWPath, String sheetName);//exports single sheet
     public String[] getHeader(String sheetName);
     public String[] getHeader(int sheetNum);
+    
     
 }

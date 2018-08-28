@@ -23,20 +23,23 @@ public class Test {
         Path target2 = Paths.get("C:\\Users\\awaddell\\Documents\\kohlerrep.xlsx");
         Path target3 = Paths.get("C:\\Users\\awaddell\\Documents\\kohlerrepM.xlsx");
 
-        FileHandler testobj = FileParse.importData(target);
+        CSVDoc testobj = FileParse.importCSV(target);
         FileHandler testobj2 = FileParse.importData(target2);
-        ExcelHandler testobj3 =  (ExcelHandler) FileParse.importData(target3);
+        ExcelWorkbook testobj3 =  FileParse.importExcel(target3);
         //System.out.println("TEST OBJ DIR: " + testobj.Tdir);
         System.out.println(System.getProperty("file.separator").toString());
         System.out.println(Arrays.toString(testobj.getHeader()));
         System.out.println(testobj.getClass());
-        System.out.println("Document has " + testobj.sizeTest() + " lines");
-        testobj.exportData("C:\\Users\\awaddell\\Documents\\kohlerrep3test.csv");
+        //System.out.println("Document has " + testobj.sizeTest() + " lines");
+        //testobj.exportData("C:\\Users\\awaddell\\Documents\\kohlerrep3test.csv");
         System.out.println(testobj2.getClass());
+        testobj.loadFile();
+        System.out.println("HEADER: " + Arrays.toString(testobj.getHeader()));
         //testobj2.loadFile();
         //System.out.println(Arrays.toString(testobj2.getSheetNames().toArray()));
         //HashMap j = testobj2.getRow(3);
-        testobj3.loadFile();
+        //testobj3.loadFile();
+        
         System.out.println(Arrays.toString(testobj3.getSheetNames().toArray()));
         //System.out.println(Arrays.toString(testobj2.getLineData(j)));
         

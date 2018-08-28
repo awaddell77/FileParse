@@ -12,7 +12,7 @@ import java.util.HashMap;
  * @author awaddell
  * @param <E>
  */
-abstract public class FileHandler<E>{
+abstract public class FileHandler<E> implements SpreadsheetDoc<E> {
     public int length = 0;
     protected String fName;
     protected String Tdir;
@@ -20,7 +20,7 @@ abstract public class FileHandler<E>{
     protected String saveDir;
     protected int headerLoc = 0;
     protected String[] header;
-    protected String delim; 
+    //protected String delim; 
     
     public FileHandler  (String fName) {
         this.fName = fName;
@@ -58,6 +58,7 @@ abstract public class FileHandler<E>{
     }
     public int getHeaderLoc(){
         return this.headerLoc;
+        
     }
     protected String dirExtract(){
         String temp = this.fName + this.Tdir;
@@ -76,24 +77,35 @@ abstract public class FileHandler<E>{
         this.Tdir = dirExtract();
         
     }
+    /*
     public void setDir(String nDir){
         this.Tdir = nDir;
     }
     public void setDelim(String delim){
         this.delim = delim;
-    }
+    }*/
     public int sizeTest(){
         return this.fData.size();
     }
     protected boolean checkDir(){
         File checker = new File(this.Tdir);
         return checker.exists();
-        
+    }
+    
+    @Override
+    public void setHeaderLoc(int rowNum){
+        if (this.length < rowNum){
+            throw new java.lang.IndexOutOfBoundsException("File is only " + this.length + 
+                    " rows.");
+            
+        }
+        else{
+            this.headerLoc = rowNum;
+        }
         
     }
-    public ArrayList<String> getSheetNames(){
-        return null;
-    }
+            
+
 
     
     protected void mkDir(String dir, boolean inCWD){
@@ -119,14 +131,14 @@ abstract public class FileHandler<E>{
         return false;
     }
 
-    abstract public HashMap<E,E> getRow(int rownum);
-    abstract public Object[] getHeader();
-    abstract public void loadFile();
+    //abstract public HashMap<E,E> getRow(int rownum);
+    //abstract public Object[] getHeader();
+    ///abstract public void loadFile();
     //abstract public void exportData();
     //abstract public int lineCount();
     
-    abstract public void importData(ArrayList<HashMap<E, E>> nData);
-    abstract public void exportData(String fnameWPath);
+    //abstract public void importData(ArrayList<HashMap<E, E>> nData);
+    //abstract public void exportData(String fnameWPath);
     
     
     

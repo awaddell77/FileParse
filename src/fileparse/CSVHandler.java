@@ -14,9 +14,11 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import com.opencsv.CSVReaderBuilder;
+import com.opencsv.CSVParserBuilder;
 
-
-class CSVHandler<E extends FileHandler> extends FileHandler<E>{
+class CSVHandler<E> extends FileHandler<E> implements CSVDoc<E>{
+    protected char delim = ',';
     public CSVHandler(String fName){
         super(fName);
         
@@ -27,6 +29,16 @@ class CSVHandler<E extends FileHandler> extends FileHandler<E>{
         super(fName, tDir);
     }
     @Override
+    public void setDelimiter(char c){
+        this.delim = c;
+    }
+    @Override
+    public char getDelimiter() {
+        return this.delim;
+    }
+
+
+    @Override
     public void loadFile(){
         Reader reader = null;
         try {
@@ -36,7 +48,15 @@ class CSVHandler<E extends FileHandler> extends FileHandler<E>{
         } catch (IOException ex) {
             System.out.println("ERROR: " + ex.getMessage());
         }
-        CSVReader temp = new CSVReader(reader);
+
+        CSVReader temp =  new CSVReaderBuilder(reader)
+                .withCSVParser(
+                new CSVParserBuilder()
+                        .withSeparator(this.delim)
+                        .build())
+                .build();
+                
+        
         int count = 0;
         String[] line;
         try {
@@ -108,6 +128,7 @@ class CSVHandler<E extends FileHandler> extends FileHandler<E>{
        
         
     }
+
 
     
     

@@ -7,6 +7,7 @@ package fileparse;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -18,6 +19,7 @@ import java.util.logging.Logger;
 import org.apache.poi.EncryptedDocumentException;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 
 //http://poi.apache.org/overview.html#components
@@ -25,7 +27,7 @@ import org.apache.poi.ss.usermodel.*;
  *
  * @author awaddell
  */
-class ExcelHandler<E> extends FileHandler<E> implements ExcelWorkbook {
+class ExcelHandler<E> extends FileHandler<E> implements ExcelWorkbook<E> {
     private String targetSheet;
     private boolean isMultSheet = false;
     private HashMap<String, SheetC> multSheet = new HashMap<>();
@@ -59,6 +61,7 @@ class ExcelHandler<E> extends FileHandler<E> implements ExcelWorkbook {
         if (n > 1){
             this.isMultSheet = true;
             this.loadFM(wkbk);
+            
             
             
         }
@@ -140,13 +143,15 @@ class ExcelHandler<E> extends FileHandler<E> implements ExcelWorkbook {
     }
     
     
-    
-    
-    
-    
-    
     @Override
     public void exportData(String fNameWPath){
+        FileWriter tFile = null;
+        try {
+            tFile = new FileWriter(fNameWPath);
+        } catch (IOException ex) {
+            Logger.getLogger(CSVHandler.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
         
     }
 
@@ -192,7 +197,20 @@ class ExcelHandler<E> extends FileHandler<E> implements ExcelWorkbook {
 
     @Override
     public void exportData(String fNameWPath, String sheetName) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        Workbook workbook = new XSSFWorkbook();
+        CreationHelper createHelper = workbook.getCreationHelper(); //helps with formatting 
+        int len = this.sheetNames.size();
+        for (int i= 0; i < len; i++) {
+           createSheet(this.multSheet.get(this.sheetNames.get(i)));
+        }
+        
+    
+        
+    }
+    private Sheet createSheet(SheetC shData){
+        return null;
+        
+        
     }
     private class SheetC{
         private final String sheetName;
@@ -219,7 +237,6 @@ class ExcelHandler<E> extends FileHandler<E> implements ExcelWorkbook {
         public HashMap<E, E> getRow(int rNum){
             return sheetData.get(rNum);
         }
-        
-        
+
     }
 }

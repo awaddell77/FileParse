@@ -11,7 +11,7 @@ import java.util.LinkedList;
 importData method requires Path instead of string because converting from string
 to path adds an extra \ to windows paths whereas converting from Path to string does not
 */
-public class FileParse<E extends FileHandler>{
+public class FileParse{
     public FileParse(){
         
         
@@ -53,7 +53,7 @@ public class FileParse<E extends FileHandler>{
         }
 
     }
-    public static CSVHandler importCSV(Path fname){
+    public static CSVDoc importCSV(Path fname){
         String dirName = null;
         String temp = fNameExtract(fname.toString());
         
@@ -75,8 +75,9 @@ public class FileParse<E extends FileHandler>{
             return mInst;
         }
         
+        
     } 
-    public  static ExcelHandler importExcel(Path fname) throws IOException {
+    public  static ExcelWorkbook importExcel(Path fname) throws IOException {
         String dirName = null;
         String temp = fNameExtract(fname.toString());
         
