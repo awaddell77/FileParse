@@ -25,11 +25,12 @@ import org.apache.poi.ss.usermodel.*;
  *
  * @author awaddell
  */
-class ExcelHandler<E> extends FileHandler<E> {
+class ExcelHandler<E> extends FileHandler<E> implements ExcelWorkbook {
     private String targetSheet;
     private boolean isMultSheet = false;
     private HashMap<String, SheetC> multSheet = new HashMap<>();
     private ArrayList<String> sheetNames = new ArrayList<>();
+    
  
     
     
@@ -41,6 +42,7 @@ class ExcelHandler<E> extends FileHandler<E> {
         
         
     }
+    
 
     @Override
     public void loadFile(){
@@ -65,38 +67,7 @@ class ExcelHandler<E> extends FileHandler<E> {
             //this.sheetNames.add(wkbk.getSheetName(0));
             this.fData = this.processSheet(wkbk, 0);
         }
-        /*Sheet sheet = wkbk.getSheetAt(0);
-        int shLen = sheet.getLastRowNum();
-        Row header = sheet.getRow(0);
-        int rLen = header.getLastCellNum();
-        String[] tempHead = new String[rLen];
-        for (int i= 0; i < rLen; i++){
-            
-            Cell cell = header.getCell(i);
-            tempHead[i] = cell.getStringCellValue();
-                       
-        }
-        this.header = tempHead;
-        System.out.println("HEADER:");
-        System.out.println(Arrays.toString(this.header));
-        
-        for (int i = 1; i < shLen; i++){
-            Row row = sheet.getRow(i);
-            DataFormatter dataFormatter = new DataFormatter();
-            //int len = sheet.getLastRowNum();
-            HashMap tempHash = new HashMap<>();
-            
-            for (int i2 = 0; i2 < row.getLastCellNum(); i2++){
-                Cell tempCell = row.getCell(i2);
-                String val = dataFormatter.formatCellValue(tempCell);
-                
-                tempHash.put(this.header[i2], val);
-            }
-            System.out.println(Arrays.toString(this.getLineData(tempHash)));
-            this.fData.add(tempHash);
-            tempHash.clear();
-        }*/
-        
+
 
     }
     private ArrayList<HashMap<E, E>> processSheet(Workbook wkbk, int shNum){
@@ -152,6 +123,7 @@ class ExcelHandler<E> extends FileHandler<E> {
             this.multSheet.put(tempSheet.getName(),tempSheet);
             
             
+            
         }
         
         
@@ -182,6 +154,18 @@ class ExcelHandler<E> extends FileHandler<E> {
     public String[] getHeader() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
+    @Override
+    public String[] getHeader(String sheetName){
+        return this.multSheet.get(sheetName).getHeader();
+        
+    }
+        
+    @Override
+    public String[] getHeader(int sheetNum){
+        String name = this.sheetNames.get(sheetNum);
+        return this.multSheet.get(name).getHeader();
+        
+    }
 
     @Override
     public HashMap<E,E> getRow(int rownum) {
@@ -189,6 +173,7 @@ class ExcelHandler<E> extends FileHandler<E> {
         return this.fData.get(rownum);
         
     }
+    @Override
     public HashMap<E,E> getRow(int sheetnum, int rownum ) {
         //returns row of the first sheet in Hashmap form
         if (this.isMultSheet){
@@ -202,6 +187,11 @@ class ExcelHandler<E> extends FileHandler<E> {
 
     @Override
     public void importData(ArrayList<HashMap<E, E>> nData) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void exportData(String fNameWPath, String sheetName) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     private class SheetC{

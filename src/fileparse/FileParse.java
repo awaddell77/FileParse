@@ -6,12 +6,14 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.LinkedList;
 
+
 /*
 importData method requires Path instead of string because converting from string
 to path adds an extra \ to windows paths whereas converting from Path to string does not
 */
 public class FileParse<E extends FileHandler>{
     public FileParse(){
+        
         
     }
 

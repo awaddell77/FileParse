@@ -8,3 +8,4 @@ build/classes/.netbeans_update_resources
 nbproject/build-impl.xml
 nbproject/project.xml
 /dist/
+*.xml
